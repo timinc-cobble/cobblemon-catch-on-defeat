@@ -2,11 +2,11 @@
 
 v1.6-1.5.0
 
-Modrinth
+[Modrinth](https://modrinth.com/mod/cobblemon-catch-on-defeat)
 
-CurseForge
+[CurseForge](https://www.curseforge.com/minecraft/mc-mods/cobblemon-catch-on-defeat)
 
-GitHub
+[GitHub](https://github.com/timinc-cobble/cobblemon-catch-on-defeat)
 
 ## What if…
 

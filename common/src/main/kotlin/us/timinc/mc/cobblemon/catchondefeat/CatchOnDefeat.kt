@@ -20,7 +20,7 @@ object CatchOnDefeat : AbstractMod<CatchOnDefeat.Config>(MOD_ID, Config::class.j
         val heal: Boolean = true
         val preventRegularCapture: Boolean = true
         val thereCanOnlyBeOnePlayerInBattle: Boolean = true
-        val everybodysCaughtThisWay: Boolean = false
+        val everybodysCaughtThisWay: Boolean = true
         val countsAsCapture: Boolean = true
         val alwaysAcceptJoin: Boolean = false
         val rejectsCountAsRelease: Boolean = true

@@ -23,6 +23,7 @@ object CatchOnDefeat : AbstractMod<CatchOnDefeat.Config>(MOD_ID, Config::class.j
         val everybodysCaughtThisWay: Boolean = false
         val countsAsCapture: Boolean = true
         val alwaysAcceptJoin: Boolean = false
+        val rejectsCountAsRelease: Boolean = true
     }
 
     object CustomProperties {

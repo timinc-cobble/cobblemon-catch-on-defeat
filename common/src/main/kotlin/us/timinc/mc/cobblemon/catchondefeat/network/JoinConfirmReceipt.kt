@@ -1,6 +1,9 @@
 package us.timinc.mc.cobblemon.catchondefeat.network
 
+import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.events.storage.ReleasePokemonEvent
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.party
 import io.wispforest.owo.network.ClientAccess
 import io.wispforest.owo.network.ServerAccess
 import net.minecraft.network.chat.Component
@@ -56,6 +59,25 @@ object JoinConfirmReceipt :
             val receipt = JOIN_CONFIRM.pullReceipt(data.id, serverAccess.player)
             if (!data.accepted) {
                 receipt.player.sendSystemMessage(wasReleased(receipt.data.pokemon.getDisplayName()))
+                if (config.rejectsCountAsRelease) {
+                    AttemptJoinOnDefeatHandler.finishJoin(receipt.player, receipt.data.pokemon)
+
+                    val party = receipt.player.party()
+                    val pokemon = receipt.data.pokemon
+                    CobblemonEvents.POKEMON_RELEASED_EVENT_PRE.postThen(
+                        event = ReleasePokemonEvent.Pre(receipt.player, pokemon, party),
+                        ifSucceeded = {
+                            party.remove(pokemon)
+                            CobblemonEvents.POKEMON_RELEASED_EVENT_POST.post(
+                                ReleasePokemonEvent.Post(
+                                    receipt.player,
+                                    pokemon,
+                                    party
+                                )
+                            )
+                        }
+                    )
+                }
                 return
             }
             AttemptJoinOnDefeatHandler.finishJoin(receipt.player, receipt.data.pokemon)

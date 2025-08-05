@@ -44,8 +44,8 @@ object AttemptJoinOnDefeatHandler : AbstractHandler<BattleFaintedEvent>() {
             return
         }
 
-        val chance = DEFEAT_JOIN_CHANCE.getValue(pokemon) ?: 100F
-        val roll = nextFloat() * 100
+        val chance = DEFEAT_JOIN_CHANCE.getValue(pokemon) ?: config.defaultJoinChance
+        val roll = nextFloat() * 100F
         if (roll > chance) {
             for (player in players) {
                 player.sendSystemMessage(

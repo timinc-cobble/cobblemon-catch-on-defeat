@@ -31,6 +31,7 @@ object CatchOnDefeat : AbstractMod<CatchOnDefeat.Config>(MOD_ID, Config::class.j
         val CATCH_ON_DEFEAT = registerCustomPokemonProperty(CustomBooleanProperty(listOf("catch_on_defeat")))
         val MUST_BE_SOLOED = registerCustomPokemonProperty(CustomBooleanProperty(listOf("must_be_soloed")))
         val DEFEAT_JOIN_CHANCE = registerCustomPokemonProperty(CustomFloatProperty(listOf("defeat_join_chance")))
+        val PREVENT_REGULAR_CAPTURE = registerCustomPokemonProperty(CustomBooleanProperty(listOf("prevent_regular_capture")))
     }
 
     object TranslationComponents {

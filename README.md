@@ -62,7 +62,7 @@ Then, try throwing any old type of PokeBall at the Aipom that was spawned. By de
 
 ## Roadmap
 
-If you’d like to keep up with the work being done on the mod, please join [the Discord](https://discord.com/invite/WKAR27SdSv) and subscribe to notifications on the channel for this content. You can also keep track of the to do list available on the mod’s main page (<link to the mod’s main page>).
+If you’d like to keep up with the work being done on the mod, please join [the Discord](https://discord.com/invite/WKAR27SdSv) and subscribe to notifications on the channel for this content. You can also keep track of the to do list available on [the mod’s main page](https://www.notion.so/Catch-On-Defeat-21d57e0d4afd803b8458e012ecbfdc6c?pvs=21).
 
 ## Feedback
 

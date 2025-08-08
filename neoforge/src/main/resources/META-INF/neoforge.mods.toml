@@ -37,13 +37,13 @@ side = "BOTH"
 [[dependencies.${ modId }]]
 modId = "tim_core"
 mandatory = true
-versionRange = "${tim_core_neoforge_version}"
+versionRange = "[${tim_core_neoforge_version},)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${modId}]]
 modId = "owo"
 mandatory = true
-versionRange = "${owo_neoforge_version}"
+versionRange = "[${owo_neoforge_version},)"
 ordering = "NONE"
 side = "BOTH"

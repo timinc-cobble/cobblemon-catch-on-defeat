@@ -1,6 +1,6 @@
 # Catch on Defeat
 
-v1.6.1-1.5.0
+v1.6.1-1.5
 
 [Modrinth](https://modrinth.com/mod/cobblemon-catch-on-defeat)
 
@@ -24,7 +24,7 @@ v1.6.1-1.5.0
 
 - [Cobblemon](https://www.notion.so/Cobblemon-22157e0d4afd80a49896c70a775a3c7f?pvs=21)
 - [Cobblemon Tim Core](https://www.notion.so/Tim-Core-22057e0d4afd809b9c02e78f26805376?pvs=21)
-- [owo Lib](https://modrinth.com/mod/owo-lib)
+- [owo Lib](https://www.notion.so/owo-Lib-24957e0d4afd80a99b80d40fa16ffa40?pvs=21)
 
 ## Testing
 
@@ -59,6 +59,7 @@ Then, try throwing any old type of PokeBall at the Aipom that was spawned. By de
 ## Known Issues
 
 - As this uses Cobblemon Tim Core’s custom Pokémon properties logic, there is a known issue where loading up the first world in a single player session will not show the autocomplete for the custom Pokémon properties in commands. The property still works, it’s just the autocomplete that’s weird.
+- v1.6.1-1.5.0 had an overly-specific version requirement for Tim Core. Loosened it up to that or later.
 
 ## Roadmap
 

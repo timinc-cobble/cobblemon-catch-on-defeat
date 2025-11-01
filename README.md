@@ -59,7 +59,8 @@ Then, try throwing any old type of PokeBall at the Aipom that was spawned. By de
 ## Known Issues
 
 - As this uses Cobblemon Tim Core’s custom Pokémon properties logic, there is a known issue where loading up the first world in a single player session will not show the autocomplete for the custom Pokémon properties in commands. The property still works, it’s just the autocomplete that’s weird.
-- v1.6.1-1.5.0 had an overly-specific version requirement for Tim Core. Loosened it up to that or later.
+- v1.6.1-1.5.0 on Fabric had an overly-specific version requirement for Tim Core. Loosened it up to that or later in v1.6.1-1.5.1 on Fabric.
+- v1.6.1-1.5.1 and below would still add the Pokémon to your PC even if you declined it, but had a full party, and had `rejectsCountAsRelease` turned on. v1.6.1-1.5.2 remedies this.
 
 ## Roadmap
 

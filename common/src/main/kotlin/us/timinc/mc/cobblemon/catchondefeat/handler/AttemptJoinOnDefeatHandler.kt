@@ -77,7 +77,7 @@ object AttemptJoinOnDefeatHandler : AbstractHandler<BattleFaintedEvent>() {
         }
     }
 
-    fun finishJoin(player: ServerPlayer, pokemon: Pokemon) {
+    fun finishJoin(player: ServerPlayer, pokemon: Pokemon, silently: Boolean = false) {
         val storage = Cobblemon.storage.getParty(player)
         if (config.heal) pokemon.heal()
         storage.add(pokemon)
@@ -90,9 +90,12 @@ object AttemptJoinOnDefeatHandler : AbstractHandler<BattleFaintedEvent>() {
                 )
             )
         }
-        player.sendSystemMessage(
-            joinedTeam(pokemon)
-        )
+
+        if (!silently) {
+            player.sendSystemMessage(
+                joinedTeam(pokemon)
+            )
+        }
 
         JOIN_DEFEAT_POST.emit(
             JoinDefeatEvent.Post(player, pokemon)

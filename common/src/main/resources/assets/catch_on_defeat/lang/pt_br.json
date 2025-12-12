@@ -1,0 +1,8 @@
+{
+  "catch_on_defeat.feedback.cant_catch": "Você deve derrotar %1$s para capturá-lo.",
+  "catch_on_defeat.feedback.joined_team": "%1$s se juntou à sua equipe!",
+  "catch_on_defeat.feedback.there_can_only_be_one": "%1$s só tem chance de se juntar à sua equipe em uma batalha 1 contra 1.",
+  "catch_on_defeat.feedback.ran_away": "%1$s fugiu!",
+  "catch_on_defeat.ui.would_like_to_join": "%1$s gostaria de se juntar à sua equipe!",
+  "catch_on_defeat.feedback.released": "%1$s foi libertado."
+}

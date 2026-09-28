@@ -69,7 +69,7 @@ object AttemptJoinOnDefeatHandler : AbstractHandler<BattleFaintedEvent>() {
         if (config.alwaysAcceptJoin) {
             finishJoin(player, clonedPokemon)
         } else {
-            val receipt = JoinConfirmReceipt.Data(clonedPokemon)
+            val receipt = JoinConfirmReceipt.Data(clonedPokemon, player.level().gameTime)
             val packetId = JOIN_CONFIRM.hangReceipt(player, receipt)
             val packet = receipt.toPacket(packetId)
             packet.sendToPlayer(player)

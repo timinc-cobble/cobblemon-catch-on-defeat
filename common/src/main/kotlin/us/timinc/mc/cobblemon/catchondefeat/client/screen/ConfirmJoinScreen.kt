@@ -66,8 +66,7 @@ class ConfirmJoinScreen(private val packet: JoinConfirmReceipt.Packet) :
             cancel = false,
             countdown = packet.countdown,
             callback = {
-                responded = true
-                packet.accept()
+                respond(accepted = true)
                 onClose()
             }
         )
@@ -79,8 +78,7 @@ class ConfirmJoinScreen(private val packet: JoinConfirmReceipt.Packet) :
             y + 63,
             cancel = true,
             callback = {
-                responded = false
-                packet.reject()
+                respond(accepted = false)
                 onClose()
             }
         )
@@ -173,10 +171,20 @@ class ConfirmJoinScreen(private val packet: JoinConfirmReceipt.Packet) :
         super.render(context, mouseX, mouseY, delta)
     }
 
+    private fun respond(accepted: Boolean) {
+        if (responded) return
+        responded = true
+        if (accepted) packet.accept() else packet.reject()
+    }
+
+    override fun removed() {
+        super.removed()
+        respond(accepted = false)
+    }
+
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean = when {
         (keyCode == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) -> {
-            responded = false
-            packet.reject()
+            respond(accepted = false)
             this.onClose()
             return true
         }
@@ -186,8 +194,7 @@ class ConfirmJoinScreen(private val packet: JoinConfirmReceipt.Packet) :
 
     override fun tick() {
         if (packet.countdown != null && ticksElapsed == (packet.countdown * 20)) {
-            packet.reject()
-            responded = false
+            respond(accepted = false)
             onClose()
         }
 

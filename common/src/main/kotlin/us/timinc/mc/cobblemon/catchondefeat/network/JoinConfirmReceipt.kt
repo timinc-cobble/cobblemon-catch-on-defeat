@@ -10,6 +10,7 @@ import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import net.minecraft.client.Minecraft
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
@@ -39,7 +40,7 @@ object JoinConfirmReceipt {
 
             fun decode(buffer: RegistryFriendlyByteBuf) = Packet(
                 ByteBufCodecs.STRING_UTF8.decode(buffer).let { UUID.fromString(it) },
-                ByteBufCodecs.STRING_UTF8.decode(buffer).let { Component.translatable(it) },
+                ComponentSerialization.STREAM_CODEC.decode(buffer),
                 RenderablePokemon.loadFromBuffer(buffer),
                 ByteBufCodecs.optional(ByteBufCodecs.INT).decode(buffer).orElse(null)
             )
@@ -47,7 +48,7 @@ object JoinConfirmReceipt {
 
         override fun encode(buffer: RegistryFriendlyByteBuf) {
             ByteBufCodecs.STRING_UTF8.encode(buffer, uuid.toString())
-            ByteBufCodecs.STRING_UTF8.encode(buffer, name.string)
+            ComponentSerialization.STREAM_CODEC.encode(buffer, name)
             renderable.saveToBuffer(buffer)
             ByteBufCodecs.optional(ByteBufCodecs.INT).encode(buffer, Optional.ofNullable(countdown))
         }

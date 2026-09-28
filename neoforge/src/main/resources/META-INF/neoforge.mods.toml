@@ -1,5 +1,5 @@
 modLoader = "kotlinforforge"
-loaderVersion = "[4,)"
+loaderVersion = "[5.12,)"
 license = "MIT"
 issueTrackerURL = "${modIssues}"
 
@@ -38,12 +38,5 @@ side = "BOTH"
 modId = "tim_core"
 mandatory = true
 versionRange = "[${tim_core_neoforge_version},)"
-ordering = "NONE"
-side = "BOTH"
-
-[[dependencies.${modId}]]
-modId = "owo"
-mandatory = true
-versionRange = "[${owo_neoforge_version},)"
-ordering = "NONE"
+ordering = "AFTER"
 side = "BOTH"

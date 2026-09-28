@@ -1,9 +1,11 @@
 package us.timinc.mc.cobblemon.catchondefeat
 
+import com.cobblemon.mod.common.NetworkManager
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.reactive.CancelableObservable
 import com.cobblemon.mod.common.api.reactive.EventObservable
+import com.cobblemon.mod.common.net.PacketRegisterInfo
 import com.cobblemon.mod.common.pokemon.Pokemon
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -11,7 +13,11 @@ import us.timinc.mc.cobblemon.catchondefeat.event.JoinDefeatEvent
 import us.timinc.mc.cobblemon.catchondefeat.handler.AttemptCancelPokeballHit
 import us.timinc.mc.cobblemon.catchondefeat.handler.AttemptJoinOnDefeatHandler
 import us.timinc.mc.cobblemon.catchondefeat.network.JoinConfirmReceipt
-import us.timinc.mc.cobblemon.timcore.*
+import us.timinc.mc.cobblemon.timcore.AbstractConfig
+import us.timinc.mc.cobblemon.timcore.AbstractMod
+import us.timinc.mc.cobblemon.timcore.CustomBooleanProperty
+import us.timinc.mc.cobblemon.timcore.CustomFloatProperty
+import us.timinc.mc.cobblemon.timcore.Holder
 
 const val MOD_ID: String = "catch_on_defeat"
 
@@ -25,13 +31,16 @@ object CatchOnDefeat : AbstractMod<CatchOnDefeat.Config>(MOD_ID, Config::class.j
         val alwaysAcceptJoin: Boolean = false
         val rejectsCountAsRelease: Boolean = true
         val defaultJoinChance: Float = 100F
+        val enableCountdown: Boolean = false
+        val countdownSeconds: Int = 10
     }
 
     object CustomProperties {
         val CATCH_ON_DEFEAT = registerCustomPokemonProperty(CustomBooleanProperty(listOf("catch_on_defeat")))
         val MUST_BE_SOLOED = registerCustomPokemonProperty(CustomBooleanProperty(listOf("must_be_soloed")))
         val DEFEAT_JOIN_CHANCE = registerCustomPokemonProperty(CustomFloatProperty(listOf("defeat_join_chance")))
-        val PREVENT_REGULAR_CAPTURE = registerCustomPokemonProperty(CustomBooleanProperty(listOf("prevent_regular_capture")))
+        val PREVENT_REGULAR_CAPTURE =
+            registerCustomPokemonProperty(CustomBooleanProperty(listOf("prevent_regular_capture")))
     }
 
     object TranslationComponents {
@@ -62,11 +71,26 @@ object CatchOnDefeat : AbstractMod<CatchOnDefeat.Config>(MOD_ID, Config::class.j
         val JOIN_DEFEAT_POST = EventObservable<JoinDefeatEvent.Post>()
     }
 
-    object Network : AbstractOwoNetwork(modResource("main")) {
-        init {
-            mainChannel.registerClientbound(JoinConfirmReceipt.Packet::class.java, JoinConfirmReceipt::handleClient)
-            mainChannel.registerServerbound(JoinConfirmReceipt.Response::class.java, JoinConfirmReceipt::handleServer)
-        }
+    object Network {
+        lateinit var manager: NetworkManager
+        val s2cPayloads = generateS2CPacketInfoList()
+        val c2sPayloads = generateC2SPacketInfoList()
+
+        private fun generateS2CPacketInfoList(): List<PacketRegisterInfo<*>> = listOf(
+            PacketRegisterInfo(
+                JoinConfirmReceipt.Packet.ID,
+                JoinConfirmReceipt.Packet::decode,
+                JoinConfirmReceipt.HandlePacket
+            ),
+        )
+
+        private fun generateC2SPacketInfoList(): List<PacketRegisterInfo<*>> = listOf(
+            PacketRegisterInfo(
+                JoinConfirmReceipt.Response.ID,
+                JoinConfirmReceipt.Response::decode,
+                JoinConfirmReceipt.HandleResponse
+            ),
+        )
     }
 
     object Holders {

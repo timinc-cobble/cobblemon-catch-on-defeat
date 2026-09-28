@@ -15,7 +15,6 @@ import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.CustomProperties.MUST_
 import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.Events.JOIN_DEFEAT_POST
 import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.Events.JOIN_DEFEAT_PRE
 import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.Holders.JOIN_CONFIRM
-import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.Network.sendClientPacket
 import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.TranslationComponents.joinedTeam
 import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.TranslationComponents.ranAway
 import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.TranslationComponents.thereCanOnlyBeOne
@@ -73,7 +72,7 @@ object AttemptJoinOnDefeatHandler : AbstractHandler<BattleFaintedEvent>() {
             val receipt = JoinConfirmReceipt.Data(clonedPokemon)
             val packetId = JOIN_CONFIRM.hangReceipt(player, receipt)
             val packet = receipt.toPacket(packetId)
-            sendClientPacket(packet, player)
+            packet.sendToPlayer(player)
         }
     }
 

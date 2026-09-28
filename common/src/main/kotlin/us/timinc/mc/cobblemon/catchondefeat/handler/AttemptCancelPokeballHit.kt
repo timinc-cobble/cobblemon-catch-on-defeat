@@ -11,11 +11,9 @@ import us.timinc.mc.cobblemon.timcore.AbstractHandler
 object AttemptCancelPokeballHit : AbstractHandler<ThrownPokeballHitEvent>() {
     override fun handle(evt: ThrownPokeballHitEvent) {
         val pokemon = evt.pokemon.pokemon
-        if ((PREVENT_REGULAR_CAPTURE.pokemonMatcher(
-                pokemon, true
-            ) || config.preventRegularCapture) && (CATCH_ON_DEFEAT.pokemonMatcher(
-                pokemon, true
-            ) || config.everybodysCaughtThisWay)
+        if (
+            (PREVENT_REGULAR_CAPTURE.pokemonMatcher(pokemon, true) || config.preventRegularCapture) &&
+            (CATCH_ON_DEFEAT.pokemonMatcher(pokemon, true) || config.everybodysCaughtThisWay)
         ) {
             (evt.pokeBall.owner as? ServerPlayer)?.sendSystemMessage(cantCatch(pokemon))
             evt.cancel()

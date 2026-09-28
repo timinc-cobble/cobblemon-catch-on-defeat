@@ -1,7 +1,7 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("dev.architectury.loom")
     id("architectury-plugin")
+    id("com.gradleup.shadow") version "9.2.2"
 }
 
 architectury {
@@ -36,28 +36,20 @@ dependencies {
 
     modImplementation("com.cobblemon:neoforge:${property("cobblemon_version")}") { isTransitive = false }
     //Needed for cobblemon
-    forgeRuntimeLibrary("thedarkcolour:kotlinforforge-neoforge:${property("kotlin_for_forge_version")}") {
+    implementation("thedarkcolour:kotlinforforge-neoforge:${property("kotlin_for_forge_version")}") {
         exclude("net.neoforged.fancymodloader", "loader")
     }
 
-    implementation(project(":common", configuration = "namedElements"))
-    "developmentNeoForge"(project(":common", configuration = "namedElements")) {
-        isTransitive = false
+    shadowBundle(project(":common", configuration = "transformProductionNeoForge"))
+    project(":common", configuration = "namedElements").let {
+        implementation(it)
+        "developmentNeoForge"(it) { isTransitive = false }
     }
-    shadowBundle(project(":common", configuration = "transformProductionFabric"))
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
 
     modImplementation("maven.modrinth:cobblemon-tim-core:${property("tim_core_neoforge_version")}")
-
-    modImplementation("io.wispforest:owo-lib-neoforge:${property("owo_version")}")
-    annotationProcessor("io.wispforest:owo-lib-neoforge:${property("owo_version")}")
-    forgeRuntimeLibrary("io.wispforest:endec:0.1.8")
-    forgeRuntimeLibrary("io.wispforest.endec:netty:0.1.4")
-    forgeRuntimeLibrary("io.wispforest.endec:gson:0.1.5")
-    forgeRuntimeLibrary("io.wispforest.endec:jankson:0.1.5")
-    forgeRuntimeLibrary("blue.endless:jankson:1.2.3")
 }
 
 tasks.getByName<Test>("test") {
@@ -68,6 +60,7 @@ tasks.processResources {
     inputs.property("version", project.version)
 
     filesMatching("META-INF/neoforge.mods.toml") {
+        @Suppress("DEPRECATION", "We'll think about it when gradle 10 happens")
         expand(project.properties)
     }
 }

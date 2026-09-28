@@ -15,15 +15,20 @@
         "adapter": "kotlin",
         "value": "us.timinc.mc.cobblemon.catchondefeat.fabric.CatchOnDefeatFabric"
       }
+    ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "us.timinc.mc.cobblemon.catchondefeat.fabric.CatchOnDefeatFabricClient"
+      }
     ]
   },
   "depends": {
     "java": ">=21",
     "minecraft": "${minecraft_version}",
     "fabric": "*",
-    "cobblemon": "${cobblemon_version}",
-    "tim_core": ">=${tim_core_fabric_version}",
-    "owo": ">=${owo_fabric_version}"
+    "cobblemon": "${modCobblemonVersion}",
+    "tim_core": ">=${tim_core_fabric_version}"
   },
   "contact": {
     "homepage": "${modDiscord}",

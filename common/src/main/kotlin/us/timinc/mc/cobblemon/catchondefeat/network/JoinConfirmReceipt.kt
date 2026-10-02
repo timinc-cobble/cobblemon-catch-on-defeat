@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.api.events.storage.ReleasePokemonEvent
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
+import com.cobblemon.mod.common.api.scheduling.ScheduledTask
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import net.minecraft.client.Minecraft
@@ -85,14 +86,18 @@ object JoinConfirmReceipt {
 
     class Data(
         val pokemon: Pokemon,
-        val gameTime: Long
+        val gameTime: Long,
+        val countdown: Int?,
+        val deadlineTick: Long?
     ) : Holder.ReceiptPacketMaker<Packet> {
+        var timeout: ScheduledTask? = null
+
         override fun toPacket(id: UUID) = Packet(
             id,
             pokemon.getDisplayName(),
             pokemon.asRenderablePokemon(),
-            if (!config.enableCountdown) null else config.countdownSeconds,
-            if (!config.enableCountdown) null else gameTime
+            countdown,
+            if (countdown == null) null else gameTime
         )
     }
 
@@ -118,7 +123,8 @@ object JoinConfirmReceipt {
         ) {
             try {
                 val receipt = JOIN_CONFIRM.pullReceipt(packet.uuid, player)
-                if (!packet.accepted) {
+                receipt.data.timeout?.expire()
+                if (!packet.accepted || receipt.data.deadlineTick?.let { server.tickCount.toLong() >= it } == true) {
                     receipt.player.sendSystemMessage(wasReleased(receipt.data.pokemon.getDisplayName()))
                     if (config.rejectsCountAsRelease) {
                         AttemptJoinOnDefeatHandler.finishJoin(receipt.player, receipt.data.pokemon, true)

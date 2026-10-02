@@ -7,6 +7,7 @@ import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import com.cobblemon.mod.common.client.gui.summary.widgets.ModelWidget
 import com.cobblemon.mod.common.util.cobblemonResource
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.Screen
@@ -43,6 +44,15 @@ class ConfirmJoinScreen(private val packet: JoinConfirmReceipt.Packet) :
 
     override fun renderMenuBackground(context: GuiGraphics) {}
 
+    override fun isPauseScreen() = packet.countdown == null
+
+    private fun remainingTicks(): Long? {
+        val countdown = packet.countdown ?: return null
+        val gameTime = packet.gameTime ?: return 0L
+        val now = Minecraft.getInstance().level?.gameTime ?: return 0L
+        return (gameTime + countdown.toLong() * 20L - now).coerceAtLeast(0L)
+    }
+
     override fun init() {
         super.init()
 
@@ -64,7 +74,7 @@ class ConfirmJoinScreen(private val packet: JoinConfirmReceipt.Packet) :
             x + 134,
             y + 63,
             cancel = false,
-            countdown = packet.countdown,
+            remainingTicks = ::remainingTicks,
             callback = {
                 respond(accepted = true)
                 onClose()
@@ -193,7 +203,7 @@ class ConfirmJoinScreen(private val packet: JoinConfirmReceipt.Packet) :
     }
 
     override fun tick() {
-        if (packet.countdown != null && ticksElapsed == (packet.countdown * 20)) {
+        if (remainingTicks() == 0L) {
             respond(accepted = false)
             onClose()
         }
@@ -216,6 +226,6 @@ class ConfirmJoinScreen(private val packet: JoinConfirmReceipt.Packet) :
         y: Int,
         cancel: Boolean,
         callback: (Button) -> Unit,
-        countdown: Int? = null
-    ): Button = ConfirmJoinButton(x, y, cancel, callback, countdown)
+        remainingTicks: (() -> Long?)? = null
+    ): Button = ConfirmJoinButton(x, y, cancel, callback, remainingTicks)
 }

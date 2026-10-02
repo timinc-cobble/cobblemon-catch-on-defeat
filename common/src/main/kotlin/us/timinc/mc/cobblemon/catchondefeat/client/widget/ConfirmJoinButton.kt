@@ -4,7 +4,6 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import com.cobblemon.mod.common.client.render.drawScaledText
-import net.minecraft.Util
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.sounds.SoundManager
@@ -16,7 +15,7 @@ class ConfirmJoinButton(
     pX: Int, pY: Int,
     val cancel: Boolean,
     onPress: (Button) -> Unit,
-    val countdown: Int? = null
+    val remainingTicks: (() -> Long?)? = null
 ) : Button(pX, pY, BUTTON_WIDTH, BUTTON_HEIGHT, Component.literal("ConfirmJoinButton"), onPress, DEFAULT_NARRATION),
     CobblemonRenderable {
 
@@ -28,16 +27,11 @@ class ConfirmJoinButton(
         const val TEXT_HEIGHT = 10
     }
 
-    val initMillis = Util.getMillis()
-
     override fun playDownSound(soundManager: SoundManager) {}
 
     fun getSeconds(): Long? {
-        if (countdown == null) return null
-
-        val endMillis = initMillis + (countdown * 1000)
-
-        return ((endMillis - Util.getMillis()) / 1000) % 60
+        val ticks = remainingTicks?.invoke() ?: return null
+        return (ticks + 19L) / 20L
     }
 
     override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
@@ -58,12 +52,12 @@ class ConfirmJoinButton(
             font = CobblemonResources.DEFAULT_LARGE,
             text = when (cancel) {
                 true -> CommonComponents.GUI_CANCEL.copy()
-                false -> when (countdown) {
+                false -> when (val seconds = getSeconds()) {
                     null -> CommonComponents.GUI_PROCEED.copy()
                     else -> Component.translatable(
                         "catch_on_defeat.ui.proceed_cooldown",
                         CommonComponents.GUI_PROCEED,
-                        getSeconds()
+                        seconds
                     )
                 }
             },

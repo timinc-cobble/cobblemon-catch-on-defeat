@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.api.events.CobblemonEvents.POKEMON_CAPTURED
 import com.cobblemon.mod.common.api.events.battles.BattleFaintedEvent
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
+import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.getPlayer
@@ -69,10 +70,22 @@ object AttemptJoinOnDefeatHandler : AbstractHandler<BattleFaintedEvent>() {
         if (config.alwaysAcceptJoin) {
             finishJoin(player, clonedPokemon)
         } else {
-            val receipt = JoinConfirmReceipt.Data(clonedPokemon, player.level().gameTime)
+            val server = player.level().server!!
+            val countdown = if (config.enableCountdown) config.countdownSeconds.coerceAtLeast(0) else null
+            val receipt = JoinConfirmReceipt.Data(
+                clonedPokemon,
+                player.level().gameTime,
+                countdown,
+                countdown?.let { server.tickCount.toLong() + it * 20L }
+            )
             val packetId = JOIN_CONFIRM.hangReceipt(player, receipt)
             val packet = receipt.toPacket(packetId)
             packet.sendToPlayer(player)
+            receipt.timeout = countdown?.let { seconds ->
+                ServerTaskTracker.after(seconds.toFloat()) {
+                    JoinConfirmReceipt.HandleResponse.handle(JoinConfirmReceipt.Response(packetId, false), server, player)
+                }
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 # Catch on Defeat
 
-v1.6.1-1.5
+v1.8.1-1.6
 
 [Modrinth](https://modrinth.com/mod/cobblemon-catch-on-defeat)
 
@@ -24,7 +24,6 @@ v1.6.1-1.5
 
 - [Cobblemon](https://www.notion.so/Cobblemon-22157e0d4afd80a49896c70a775a3c7f?pvs=21)
 - [Cobblemon Tim Core](https://www.notion.so/Tim-Core-22057e0d4afd809b9c02e78f26805376?pvs=21)
-- [owo Lib](https://www.notion.so/owo-Lib-24957e0d4afd80a99b80d40fa16ffa40?pvs=21)
 
 ## Testing
 

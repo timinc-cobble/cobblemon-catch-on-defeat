@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.api.events.CobblemonEvents.POKEMON_CAPTURED
 import com.cobblemon.mod.common.api.events.battles.BattleFaintedEvent
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
+import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.getPlayer
@@ -15,7 +16,6 @@ import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.CustomProperties.MUST_
 import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.Events.JOIN_DEFEAT_POST
 import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.Events.JOIN_DEFEAT_PRE
 import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.Holders.JOIN_CONFIRM
-import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.Network.sendClientPacket
 import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.TranslationComponents.joinedTeam
 import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.TranslationComponents.ranAway
 import us.timinc.mc.cobblemon.catchondefeat.CatchOnDefeat.TranslationComponents.thereCanOnlyBeOne
@@ -70,10 +70,22 @@ object AttemptJoinOnDefeatHandler : AbstractHandler<BattleFaintedEvent>() {
         if (config.alwaysAcceptJoin) {
             finishJoin(player, clonedPokemon)
         } else {
-            val receipt = JoinConfirmReceipt.Data(clonedPokemon)
+            val server = player.level().server!!
+            val countdown = if (config.enableCountdown) config.countdownSeconds.coerceAtLeast(0) else null
+            val receipt = JoinConfirmReceipt.Data(
+                clonedPokemon,
+                player.level().gameTime,
+                countdown,
+                countdown?.let { server.tickCount.toLong() + it * 20L }
+            )
             val packetId = JOIN_CONFIRM.hangReceipt(player, receipt)
             val packet = receipt.toPacket(packetId)
-            sendClientPacket(packet, player)
+            packet.sendToPlayer(player)
+            receipt.timeout = countdown?.let { seconds ->
+                ServerTaskTracker.after(seconds.toFloat()) {
+                    JoinConfirmReceipt.HandleResponse.handle(JoinConfirmReceipt.Response(packetId, false), server, player)
+                }
+            }
         }
     }
 

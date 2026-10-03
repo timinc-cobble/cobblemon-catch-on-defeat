@@ -20,8 +20,6 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
 
     modImplementation("maven.modrinth:cobblemon-tim-core:${property("tim_core_fabric_version")}")
-    modImplementation("io.wispforest:owo-lib:${property("owo_version")}")
-    annotationProcessor("io.wispforest:owo-lib:${property("owo_version")}")
 }
 
 tasks.getByName<Test>("test") {

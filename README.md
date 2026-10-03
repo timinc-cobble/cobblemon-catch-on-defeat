@@ -1,6 +1,6 @@
 # Catch on Defeat
 
-v1.6.1-1.5
+v1.8.1-1.6
 
 [Modrinth](https://modrinth.com/mod/cobblemon-catch-on-defeat)
 

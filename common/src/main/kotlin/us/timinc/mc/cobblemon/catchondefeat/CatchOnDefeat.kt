@@ -97,13 +97,16 @@ object CatchOnDefeat : AbstractMod<CatchOnDefeat.Config>(MOD_ID, Config::class.j
         val JOIN_CONFIRM: Holder<JoinConfirmReceipt.Data> = Holder()
     }
 
+    override fun registerEventHandlers() {
+        super.registerEventHandlers()
+
+        CobblemonEvents.BATTLE_FAINTED.subscribe(Priority.LOW, AttemptJoinOnDefeatHandler::handle)
+        CobblemonEvents.THROWN_POKEBALL_HIT.subscribe(Priority.HIGHEST, AttemptCancelPokeballHit::handle)
+    }
+
     init {
         CustomProperties
         Network
         Holders
-        CobblemonEvents.BATTLE_FAINTED.subscribe(Priority.LOWEST, AttemptJoinOnDefeatHandler::handle)
-        CobblemonEvents.THROWN_POKEBALL_HIT.subscribe(
-            Priority.LOWEST, AttemptCancelPokeballHit::handle
-        )
     }
 }

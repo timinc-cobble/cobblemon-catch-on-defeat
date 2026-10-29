@@ -28,7 +28,7 @@ dependencies {
     minecraft("com.mojang:minecraft:${property("minecraft_version")}")
     mappings(loom.officialMojangMappings())
 
-    modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
     modRuntimeOnly("org.graalvm.js:js:${property("graalvm_version")}")
     modRuntimeOnly("org.graalvm.sdk:graal-sdk:${property("graalvm_version")}")
     modRuntimeOnly("org.graalvm.regex:regex:${property("graalvm_version")}")
@@ -41,8 +41,6 @@ dependencies {
     }
 
     modImplementation("net.fabricmc:fabric-loader:${property("fabric_loader_version")}")
-    modImplementation(fabricApi.module("fabric-command-api-v2", property("fabric_api_version").toString()))
-    modImplementation(fabricApi.module("fabric-networking-api-v1", property("fabric_api_version").toString()))
 
     //needed for cobblemon
     modImplementation("net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin")}")
